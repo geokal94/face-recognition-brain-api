@@ -60,7 +60,25 @@ app.get('/profile/:id', (req,res) => {
 
     database.users.forEach( user => {
         if (user.id === id) {
+            found = true;
             res.json(user);
+        }
+    });
+    if (!found) {
+        res.status(404).json('no such user');
+    }
+});
+
+app.put('/image', (req,res) => {
+    const { id } = req.body;
+
+    let found = false;
+
+    database.users.forEach( user => {
+        if (user.id === id) {
+            found = true;
+            user.entries++;
+            res.json(user.entries);
         }
     });
     if (!found) {
@@ -71,14 +89,3 @@ app.get('/profile/:id', (req,res) => {
 app.listen(3000 , () => {
     console.log('app is running on port 3000');
 });
-
-/*
-
-
-/ --> this is working
-/signin --> POST = success/fail
-/register --> POST = user
-/profile/:userId --> GET = user
-/image --> PUT = user
-
-*/
