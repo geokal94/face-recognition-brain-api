@@ -12,7 +12,7 @@ const image = require('./controllers/image');
 const db = knex({
     client: 'pg',
     connection: {
-      host : '127.0.0.1',
+      host : 'postgresql-reticulated-57700',
       user : 'postgres',
       password : 'test',
       database : 'smart-brain'
@@ -27,27 +27,6 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(cors());
-
-const database = {
-    users: [
-        {
-            id: '123',
-            name: 'John',
-            email: 'john@gmail.com',
-            password: 'cookies',
-            entries: 0,
-            joined: new Date()
-        },
-        {
-            id: '124',
-            name: 'Sally',
-            email: 'sally@gmail.com',
-            password: 'bananas',
-            entries: 0,
-            joined: new Date()
-        }
-    ]
-}
 
 app.get('/', (req,res) => {
     res.send('it is working');
@@ -64,6 +43,6 @@ app.put('/image', (req,res) => { image.handleImage(req,res,db)});
 app.post('/imageUrl', (req,res) => { image.handleApiCall(req,res,db)});
 
 
-app.listen(3000 , () => {
+app.listen(process.env.PORT || 3000 , () => {
     console.log(`app is running on port ${process.env.PORT}`);
 });
