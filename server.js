@@ -11,12 +11,12 @@ const profile = require('./controllers/profile');
 const db = knex({
     client: 'pg',
     connection: {
-      host : '127.0.0.1',
-      user : 'postgres',
-      password : 'test',
-      database : 'smart-brain'
+        host: '127.0.0.1',
+        user: 'postgres',
+        password: 'test',
+        database: 'smart-brain'
     }
-  });
+});
 
 db.select('*').from('users').then(data => {
     console.log(data);
@@ -27,48 +27,35 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-const database = {
-    users: [
-        {
-            id: '123',
-            name: 'John',
-            email: 'john@gmail.com',
-            password: 'cookies',
-            entries: 0,
-            joined: new Date()
-        },
-        {
-            id: '124',
-            name: 'Sally',
-            email: 'sally@gmail.com',
-            password: 'bananas',
-            entries: 0,
-            joined: new Date()
-        }
-    ]
-}
-
-app.get('/', (req,res) => {
-    res.send(database.users);
+app.get('/', (req, res) => {
+    res.send('it is working!');
 });
 
-app.post('/signin', (req,res) => {signin.handleSignin(req,res,db,bcrypt)});
+app.post('/signin', (req, res) => {
+    signin.handleSignin(req, res, db, bcrypt)
+});
 
-app.post('/register', (req,res) => { register.handleRegister(req,res,db,bcrypt) });
+app.post('/register', (req, res) => {
+    register.handleRegister(req, res, db, bcrypt)
+});
 
-app.get('/profile/:id', (req,res) => { profile.handleProfileGet(req,res,db)});
+app.get('/profile/:id', (req, res) => {
+    profile.handleProfileGet(req, res, db)
+});
 
-app.put('/image', (req,res) => {
-    const { id } = req.body;
+app.put('/image', (req, res) => {
+    const {
+        id
+    } = req.body;
     db('users').where('id', '=', id)
-    .increment('entries', 1)
-    .returning('entries')
-    .then(entries => {
-        res.json(entries[0]);
-    })
-    .catch(err => res.status(400).json('unable to get entries'))
+        .increment('entries', 1)
+        .returning('entries')
+        .then(entries => {
+            res.json(entries[0]);
+        })
+        .catch(err => res.status(400).json('unable to get entries'))
 });
 
-app.listen(3000 , () => {
-    console.log('app is running on port 3000');
+app.listen(process.env.PORT || 3000, () => {
+    console.log(`app is running on port ${process.env.PORT}`);
 });
